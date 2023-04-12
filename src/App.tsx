@@ -1,25 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Title from "./Title";
+import menu from "./data";
+import Menu from "./Menu";
 
 function App() {
+  const [menuItems, setMenuItems] = useState(menu);
+  const tempCategories = menu.map((item) => {
+    return item.category;
+  });
+  const unique = ["all", ...Array.from(new Set(tempCategories))];
+  const filterItems = (category: string) => {
+    if (category === "all") {
+      setMenuItems(menu);
+    } else {
+      const filteredItems = menu.filter((item) => {
+        return item.category === category;
+      });
+      setMenuItems(filteredItems);
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <section className="menu">
+        <Title title="our menu" />
+        <div className="btn-container">
+          {unique.map((item, index) => {
+            return (
+              <button className="btn" key={index} onClick={() => filterItems(item)}>
+                {item}
+              </button>
+            );
+          })}
+        </div>
+        <Menu items={menuItems} />
+      </section>
+    </main>
   );
 }
 
